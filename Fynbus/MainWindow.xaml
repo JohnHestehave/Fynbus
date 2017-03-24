@@ -12,11 +12,12 @@
 			<Button x:Name="ImportTilbud" Click="ImportTilbud_Click"  Content="Importer Tilbud" Width="120" Height="20" Margin="0,5,10,0" HorizontalAlignment="Right" />
 			<Button x:Name="StartImport" Click="StartImport_Click"  Content="Start Import" Width="120" Height="20" Margin="0,5,10,0" HorizontalAlignment="Right" />
 		</StackPanel>
-		<DataGrid x:Name="StamGrid" HorizontalAlignment="Stretch" Margin="10,10,600,10" VerticalAlignment="Stretch" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding}" >
+		<DataGrid x:Name="StamGrid" HorizontalAlignment="Stretch" Margin="10,10,140,10" VerticalAlignment="Stretch" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding}" IsReadOnly="True" SelectionMode="Single" HeadersVisibility="Column" MouseDoubleClick="StamGrid_MouseDoubleClick" >
 			<DataGrid.Columns>
-				<DataGridTextColumn x:Name="CompanyName" Binding="{Binding CompanyName}" Header="Firma" />
-				<DataGridTextColumn x:Name="ManagerName" Binding="{Binding ManagerName}" Header="Entreprenør" />
-				<DataGridTextColumn x:Name="Email" Binding="{Binding Email}" Header="Email" />
+				<DataGridTextColumn x:Name="CompanyName" Binding="{Binding CompanyName}" Header="Firma" MinWidth="130" />
+				<DataGridTextColumn x:Name="ManagerName" Binding="{Binding ManagerName}" Header="Entreprenør" MinWidth="130" />
+				<DataGridTextColumn x:Name="Email" Binding="{Binding Email}" Header="Email" MinWidth="150" />
+				<DataGridTextColumn x:Name="CVR" Binding="{Binding CVR}" Header="CVR" MinWidth="120" />
 				<DataGridTextColumn x:Name="Type2Count" Binding="{Binding Type2Count}" Header="Type 2" />
 				<DataGridTextColumn x:Name="Type3Count" Binding="{Binding Type3Count}" Header="Type 3" />
 				<DataGridTextColumn x:Name="Type5Count" Binding="{Binding Type5Count}" Header="Type 5" />
@@ -24,13 +25,5 @@
 				<DataGridTextColumn x:Name="Type7Count" Binding="{Binding Type7Count}" Header="Type 7" />
 			</DataGrid.Columns>
 		</DataGrid>
-		<DataGrid x:Name="TilbudGrid" HorizontalAlignment="Stretch" Margin="400,10,140,10" VerticalAlignment="Stretch" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding}" >
-			<DataGrid.Columns>
-				<DataGridTextColumn x:Name="aCompanyName" Binding="{Binding CompanyName}" Header="Skal" />
-				<DataGridTextColumn x:Name="aManagerName" Binding="{Binding ManagerName}" Header="Måske" />
-				<DataGridTextColumn x:Name="aEmail" Binding="{Binding Email}" Header="Fjernes" />
-			</DataGrid.Columns>
-		</DataGrid>
-
 	</Grid>
 </Window>

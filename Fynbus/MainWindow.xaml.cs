@@ -55,12 +55,12 @@ namespace Fynbus
 			{
 				Encoding enc = Encoding.GetEncoding("iso-8859-1");
 				var data = File.ReadAllLines(stamkunder, enc).Skip(1).Select(x => x.Split(';'))
-					.Select(x=>new Contractor() {CompanyName = x[2], ManagerName = x[1], Email = x[3],
-						Type2 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y=>y.Split(';')).Where(y=>y[2]==x[0] && int.Parse(y[5])==2).Select(y=>new Offer() {RegNr=y[0] }),
-						Type3 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y => y.Split(';')).Where(y => y[2] == x[0] && int.Parse(y[5]) == 3).Select(y => new Offer() { RegNr = y[0] }),
-						Type5 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y => y.Split(';')).Where(y => y[2] == x[0] && int.Parse(y[5]) == 5).Select(y => new Offer() { RegNr = y[0] }),
-						Type6 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y => y.Split(';')).Where(y => y[2] == x[0] && int.Parse(y[5]) == 6).Select(y => new Offer() { RegNr = y[0] }),
-						Type7 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y => y.Split(';')).Where(y => y[2] == x[0] && int.Parse(y[5]) == 7).Select(y => new Offer() { RegNr = y[0] })
+					.Select(x=>new Contractor() {CompanyName = x[2], ManagerName = x[1], Email = x[3], CVR = x[4],
+						Type2 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y => y.Split(';')).Where(y => y[2] == x[0] && int.Parse(y[5]) == 2).Select(y => new Offer() { RegNr = y[0], RouteNr = y[1], Price = float.Parse(y[3]), ServicePrice = float.Parse(y[4]) }),
+						Type3 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y => y.Split(';')).Where(y => y[2] == x[0] && int.Parse(y[5]) == 3).Select(y => new Offer() { RegNr = y[0], RouteNr = y[1], Price = float.Parse(y[3]), ServicePrice = float.Parse(y[4]) }),
+						Type5 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y => y.Split(';')).Where(y => y[2] == x[0] && int.Parse(y[5]) == 5).Select(y => new Offer() { RegNr = y[0], RouteNr = y[1], Price = float.Parse(y[3]), ServicePrice = float.Parse(y[4]) }),
+						Type6 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y => y.Split(';')).Where(y => y[2] == x[0] && int.Parse(y[5]) == 6).Select(y => new Offer() { RegNr = y[0], RouteNr = y[1], Price = float.Parse(y[3]), ServicePrice = float.Parse(y[4]) }),
+						Type7 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y => y.Split(';')).Where(y => y[2] == x[0] && int.Parse(y[5]) == 7).Select(y => new Offer() { RegNr = y[0], RouteNr = y[1], Price = float.Parse(y[3]), ServicePrice = float.Parse(y[4]) })
 					});
 				foreach (var item in data)
 				{
@@ -73,6 +73,12 @@ namespace Fynbus
 				}
 				StamGrid.ItemsSource = Contractor.AllContractors;
 			}
+		}
+
+		private void StamGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+		{
+			Contractor c = (Contractor)StamGrid.SelectedItem;
+			MessageBox.Show(c.Type2.First().RegNr);
 		}
 	}
 }

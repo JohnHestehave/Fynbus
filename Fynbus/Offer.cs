@@ -9,5 +9,8 @@ namespace Fynbus
 	public class Offer
 	{
 		public string RegNr { get; set; }
+		public string RouteNr { get; set; }
+		public float Price { get; set; }
+		public float ServicePrice { get; set; }
 	}
 }

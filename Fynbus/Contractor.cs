@@ -12,7 +12,7 @@ namespace Fynbus
 		public string CompanyName { get; set; }
 		public string ManagerName { get; set; }
 		public string Email { get; set; }
-		//int CVR;
+		public string CVR { get; set; }
 
 		public int Type2Count { get; set; }
 		public int Type3Count { get; set; }
