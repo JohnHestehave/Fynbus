@@ -10,9 +10,12 @@
 		<StackPanel>
 			<Button x:Name="ImportStam" Click="ImportStam_Click" Content="Importer Stamkunder" Width="120" Height="20" Margin="0,10,10,0" HorizontalAlignment="Right"  />
 			<Button x:Name="ImportTilbud" Click="ImportTilbud_Click"  Content="Importer Tilbud" Width="120" Height="20" Margin="0,5,10,0" HorizontalAlignment="Right" />
-			<Button x:Name="StartImport" Click="StartImport_Click"  Content="Start Import" Width="120" Height="20" Margin="0,5,10,0" HorizontalAlignment="Right" />
+			<Button x:Name="StartImport" Click="StartImport_Click"  Content="Start Import" Width="120" Height="40" Margin="0,5,10,0" HorizontalAlignment="Right" />
 		</StackPanel>
-		<DataGrid x:Name="StamGrid" HorizontalAlignment="Stretch" Margin="10,10,140,10" VerticalAlignment="Stretch" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding}" IsReadOnly="True" SelectionMode="Single" HeadersVisibility="Column" MouseDoubleClick="StamGrid_MouseDoubleClick" >
+		<StackPanel VerticalAlignment="Bottom">
+			<Button x:Name="ExportCSV" Content="Export CSV" Width="120" Height="40" Margin="0,5,10,10" HorizontalAlignment="Right" Click="ExportCSV_Click" />
+		</StackPanel>
+		<DataGrid x:Name="StamGrid" HorizontalAlignment="Stretch" Margin="10,10,140,10" VerticalAlignment="Stretch" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding}" IsReadOnly="True" SelectionMode="Single" HeadersVisibility="Column">
 			<DataGrid.Columns>
 				<DataGridTextColumn x:Name="CompanyName" Binding="{Binding CompanyName}" Header="Firma" MinWidth="130" />
 				<DataGridTextColumn x:Name="ManagerName" Binding="{Binding ManagerName}" Header="Entreprenør" MinWidth="130" />

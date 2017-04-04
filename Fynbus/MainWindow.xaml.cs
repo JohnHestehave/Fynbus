@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
+using CsvHelper;
 
 namespace Fynbus
 {
@@ -56,13 +57,13 @@ namespace Fynbus
 				Encoding enc = Encoding.GetEncoding("iso-8859-1");
 				var data = File.ReadAllLines(stamkunder, enc).Skip(1).Select(x => x.Split(';'))
 					.Select(x=>new Contractor() {CompanyName = x[2], ManagerName = x[1], Email = x[3], CVR = x[4],
-						Type2 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y => y.Split(';')).Where(y => y[2] == x[0] && int.Parse(y[5]) == 2).Select(y => new Offer() { RegNr = y[0], RouteNr = y[1], Price = float.Parse(y[3]), ServicePrice = float.Parse(y[4]) }),
-						Type3 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y => y.Split(';')).Where(y => y[2] == x[0] && int.Parse(y[5]) == 3).Select(y => new Offer() { RegNr = y[0], RouteNr = y[1], Price = float.Parse(y[3]), ServicePrice = float.Parse(y[4]) }),
-						Type5 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y => y.Split(';')).Where(y => y[2] == x[0] && int.Parse(y[5]) == 5).Select(y => new Offer() { RegNr = y[0], RouteNr = y[1], Price = float.Parse(y[3]), ServicePrice = float.Parse(y[4]) }),
-						Type6 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y => y.Split(';')).Where(y => y[2] == x[0] && int.Parse(y[5]) == 6).Select(y => new Offer() { RegNr = y[0], RouteNr = y[1], Price = float.Parse(y[3]), ServicePrice = float.Parse(y[4]) }),
-						Type7 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y => y.Split(';')).Where(y => y[2] == x[0] && int.Parse(y[5]) == 7).Select(y => new Offer() { RegNr = y[0], RouteNr = y[1], Price = float.Parse(y[3]), ServicePrice = float.Parse(y[4]) })
+						Type2 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y => y.Split(';')).Where(y => y[2] == x[0] && int.Parse(y[5]) == 2).Select(y => new Offer(y[0], int.Parse(y[1]), float.Parse(y[3]), float.Parse(y[4]), int.Parse(y[5]))),
+						Type3 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y => y.Split(';')).Where(y => y[2] == x[0] && int.Parse(y[5]) == 3).Select(y => new Offer(y[0], int.Parse(y[1]), float.Parse(y[3]), float.Parse(y[4]), int.Parse(y[5]))),
+						Type5 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y => y.Split(';')).Where(y => y[2] == x[0] && int.Parse(y[5]) == 5).Select(y => new Offer(y[0], int.Parse(y[1]), float.Parse(y[3]), float.Parse(y[4]), int.Parse(y[5]))),
+						Type6 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y => y.Split(';')).Where(y => y[2] == x[0] && int.Parse(y[5]) == 6).Select(y => new Offer(y[0], int.Parse(y[1]), float.Parse(y[3]), float.Parse(y[4]), int.Parse(y[5]))),
+						Type7 = File.ReadAllLines(tilbud, enc).Skip(1).Select(y => y.Split(';')).Where(y => y[2] == x[0] && int.Parse(y[5]) == 7).Select(y => new Offer(y[0], int.Parse(y[1]), float.Parse(y[3]), float.Parse(y[4]), int.Parse(y[5])))
 					});
-				foreach (var item in data)
+				foreach (Contractor item in data)
 				{
 					item.Type2Count = item.Type2.Count();
 					item.Type3Count = item.Type3.Count();
@@ -71,14 +72,85 @@ namespace Fynbus
 					item.Type7Count = item.Type7.Count();
 					Contractor.AllContractors.Add(item);
 				}
+				foreach (Route r in Route.Routes)
+				{
+					foreach (Contractor c in Contractor.AllContractors)
+					{
+						foreach (Offer o in c.Type2)
+						{
+							o.Contractor = c;
+							if (o.RouteNr == r.RouteID) r.Offers.Add(o);
+						}
+						foreach (Offer o in c.Type3)
+						{
+							o.Contractor = c;
+							if (o.RouteNr == r.RouteID) r.Offers.Add(o);
+						}
+						foreach (Offer o in c.Type5)
+						{
+							o.Contractor = c;
+							if (o.RouteNr == r.RouteID) r.Offers.Add(o);
+						}
+						foreach (Offer o in c.Type6)
+						{
+							o.Contractor = c;
+							if (o.RouteNr == r.RouteID) r.Offers.Add(o);
+						}
+						foreach (Offer o in c.Type7)
+						{
+							o.Contractor = c;
+							if (o.RouteNr == r.RouteID) r.Offers.Add(o);
+						}
+					}
+				}
+				//SORTING
+				foreach(Route r in Route.Routes)
+				{
+					r.Offers.Sort();
+				}
+				// DONE
 				StamGrid.ItemsSource = Contractor.AllContractors;
+				MessageBox.Show("Import completed.");
 			}
 		}
+		
 
-		private void StamGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+		private void ExportCSV_Click(object sender, RoutedEventArgs e)
 		{
-			Contractor c = (Contractor)StamGrid.SelectedItem;
-			MessageBox.Show(c.Type2.First().RegNr);
+			/*
+			StreamWriter sw = new StreamWriter("TestExport.txt");
+			foreach (Route r in Route.Routes)
+			{
+				sw.WriteLine("Route "+r.RouteID);
+				foreach(Offer o in r.Offers)
+				{
+					sw.WriteLine("Offer Type "+o.Type + " By Contractor "+o.Contractor.ManagerName+ " Price:"+o.Price+", Service Price:"+o.ServicePrice+", Weighted Price:"+((o.Price*0.7f)+(o.ServicePrice*0.3f)));
+				}
+				sw.WriteLine("");
+			}
+			sw.Close();
+			*/
+			SaveFileDialog sfd = new SaveFileDialog();
+			sfd.Filter = "CSV File(*.txt)|*.csv|All(*.*)|*";
+			if(sfd.ShowDialog() == true)
+			{
+				StreamWriter sw = new StreamWriter(sfd.FileName, false, Encoding.GetEncoding("iso-8859-1"));
+				sw.AutoFlush = true;
+				CsvWriter csv = new CsvWriter(sw);
+				foreach (Route r in Route.Routes)
+				{
+					csv.WriteField("Rute;Firma;Vogntype;Pris(Køretid);Pris(Ventetid);Pris(Vægtet)");
+					foreach (Offer o in r.Offers)
+					{
+						csv.NextRecord();
+						csv.WriteField($"{r.RouteID};{o.Contractor.CompanyName};{o.Type};{o.Price};{o.ServicePrice};{o.WeightedPrice}");
+					}
+					csv.NextRecord();
+					csv.NextRecord();
+				}
+				//File.WriteAllText(sfd.FileName, );
+				MessageBox.Show("Export completed.");
+			}
 		}
 	}
 }
