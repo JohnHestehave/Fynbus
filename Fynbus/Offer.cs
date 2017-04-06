@@ -24,6 +24,8 @@ namespace Fynbus
 			ServicePrice = sprice;
 			Type = type;
 			WeightedPrice = ((Price * 0.7f) + (ServicePrice * 0.3f));
+
+			// Checks if a route already exists for an imported offer, create a new route if not
 			foreach (Route r in Route.Routes)
 			{
 				if(r.RouteID == RouteNr)

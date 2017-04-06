@@ -33,6 +33,7 @@ namespace Fynbus
 
 		private void ImportStam_Click(object sender, RoutedEventArgs e)
 		{
+			// Import stamkunder/contractors
 			OpenFileDialog o = new OpenFileDialog();
 			o.Filter = "CSV Files (*.csv)|*.csv";
 			if(o.ShowDialog() == true)
@@ -42,6 +43,7 @@ namespace Fynbus
 		}
 		private void ImportTilbud_Click(object sender, RoutedEventArgs e)
 		{
+			// Import tilbud/offers
 			OpenFileDialog o = new OpenFileDialog();
 			o.Filter = "CSV Files (*.csv)|*.csv";
 			if (o.ShowDialog() == true)
@@ -52,8 +54,10 @@ namespace Fynbus
 
 		private void StartImport_Click(object sender, RoutedEventArgs e)
 		{
+			// Check if both contractors and offers csv's has been chosen
 			if(stamkunder != null && tilbud != null)
 			{
+				// Start reading .csv files and instantiating contractors/offers objects
 				Encoding enc = Encoding.GetEncoding("iso-8859-1");
 				var data = File.ReadAllLines(stamkunder, enc).Skip(1).Select(x => x.Split(';'))
 					.Select(x=>new Contractor() {CompanyName = x[2], ManagerName = x[1], Email = x[3], CVR = x[4],
@@ -72,6 +76,7 @@ namespace Fynbus
 					item.Type7Count = item.Type7.Count();
 					Contractor.AllContractors.Add(item);
 				}
+				// Add each offer into the corresponding route
 				foreach (Route r in Route.Routes)
 				{
 					foreach (Contractor c in Contractor.AllContractors)
@@ -103,12 +108,11 @@ namespace Fynbus
 						}
 					}
 				}
-				//SORTING
+				// sort each list of offers from a route by weighted price
 				foreach(Route r in Route.Routes)
 				{
 					r.Offers.Sort();
 				}
-				// DONE
 				StamGrid.ItemsSource = Contractor.AllContractors;
 				MessageBox.Show("Import completed.");
 			}
@@ -117,19 +121,7 @@ namespace Fynbus
 
 		private void ExportCSV_Click(object sender, RoutedEventArgs e)
 		{
-			/*
-			StreamWriter sw = new StreamWriter("TestExport.txt");
-			foreach (Route r in Route.Routes)
-			{
-				sw.WriteLine("Route "+r.RouteID);
-				foreach(Offer o in r.Offers)
-				{
-					sw.WriteLine("Offer Type "+o.Type + " By Contractor "+o.Contractor.ManagerName+ " Price:"+o.Price+", Service Price:"+o.ServicePrice+", Weighted Price:"+((o.Price*0.7f)+(o.ServicePrice*0.3f)));
-				}
-				sw.WriteLine("");
-			}
-			sw.Close();
-			*/
+			// Exports the list of routes and sorted offers into .csv
 			SaveFileDialog sfd = new SaveFileDialog();
 			sfd.Filter = "CSV File(*.txt)|*.csv|All(*.*)|*";
 			if(sfd.ShowDialog() == true)
@@ -148,7 +140,6 @@ namespace Fynbus
 					csv.NextRecord();
 					csv.NextRecord();
 				}
-				//File.WriteAllText(sfd.FileName, );
 				MessageBox.Show("Export completed.");
 			}
 		}

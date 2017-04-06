@@ -103,6 +103,8 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Stamoplysninger_Skabelon_TestData.csv" />
+    <None Include="Tilbud_Skabelon_TestData.csv" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
